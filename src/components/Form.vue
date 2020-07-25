@@ -9,24 +9,24 @@
                 <label for="" class="newLb">
                     <input type="text" placeholder="First Name" 
                     v-model="form.firstName" 
-                    :class="error.line">  
+                    :class="{'red-border': error.firstName !== ''}">  
                     <p class="mb-10 text-right text-red err">{{error.firstName}}</p>
-                    <p class="errIcon" :class="error.icon"></p>
+                    <p class="errIcon" :class="{'fa fa-exclammation-circle': error.firstName !== '' }"></p>
                 </label>
                 <label for="" class="newLb">
-                    <input type="text" placeholder="Last Name" v-model="form.lastName" :class="error.line">
+                    <input type="text" placeholder="Last Name" v-model="form.lastName" :class="{'red-border': error.lastName !== ''}">
                     <p class="mb-10 text-right text-red err">{{error.lastName}}</p>
-                    <p class="errIcon" :class="error.icon"></p>
+                    <p class="errIcon" :class="{'fa fa-exclammation-circle': error.lastName !== '' }"></p>
                 </label>
                 <label for="" class="newLb">
-                    <input type="email" placeholder="Email Address" v-model="form.emailAdd" :class="error.line">
+                    <input type="email" placeholder="Email Address" v-model="form.emailAdd" :class="{'red-border': error.emailAdd !== ''}">
                     <p class="mb-10 text-right text-red err">{{error.emailAdd}}</p>
-                    <p class="errIcon" :class="error.icon"></p>
+                    <p class="errIcon" :class="{'fa fa-exclammation-circle': error.emailAdd !== '' }"></p>
                 </label>
                 <label for="" class="newLb">
-                    <input type="password" placeholder="Password" v-model="form.password" :class="error.line">
+                    <input type="password" placeholder="Password" v-model="form.password" :class="{'red-border': error.password !== ''}">
                     <p class="mb-10 text-right text-red err">{{error.password}}</p>
-                    <p class="errIcon" :class="error.icon"></p>
+                    <p class="errIcon" :class="{'fa fa-exclammation-circle': error.password !== '' }"></p>
                 </label>
 
                 <button @click.prevent="showModal" class="text-white poppins-reg cursor-point" type="submit">claim your free trial</button>
@@ -46,7 +46,7 @@
                 this.$emit('nowShow')
             }
         }
-    }
+    };
 </script>
 
 <style>

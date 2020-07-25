@@ -44,8 +44,6 @@ export default {
         lastName: '',
         emailAdd: '',
         password: '',
-        icon: '',
-        line: ''
       }
     }
   },
@@ -60,57 +58,52 @@ export default {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    setErrorFor(){
-        this.err.icon = "fa fa-exclammation-circle"
-        this.err.line = "red-border"
-        this.openModal = false
-    },
-    setSuccessFor(){
-      this.err.icon = ""
-      this.err.line = "no-red-border"
-      this.openModal = true
-    },
-    showPopup(){
-        let _this = this;
+    // setErrorFor() {
+    //     this.err.icon = "fa fa-exclammation-circle"
+    // },
+    // setSuccessFor(){
+    //   this.err.icon = ""
+    // },
+    showPopup() {
+        const NO_ERROR = "NO_ERROR";
 
-        if(this.userData.firstName == ""){
-          this.err.firstName = "First Name cannot be empty"
-          _this.setErrorFor()
-        }else{
-          this.err.firstName = ""
-          _this.setSuccessFor()
+        const required = (message) => (fieldname) => {
+          if(this.userData[fieldname] == "") 
+            return message || "Field is required"
+          return NO_ERROR
         }
 
-        if(this.userData.lastName == ""){
-          this.err.lastName = "Last Name cannot be empty"
-          _this.setErrorFor()
-        }else{
-          this.err.lastName = ""
-          _this.setSuccessFor()
+        const isEmail = (message) => (fieldname) => {
+            if (!this.validEmail(this.userData[fieldname]))
+                return message;
+            return NO_ERROR
         }
 
-        if(this.userData.password == ""){
-          this.err.password = "Password cannot be empty"
-          _this.setErrorFor()
-        }else{
-          this.err.password = ""
-          _this.setSuccessFor()
+        const fieldErrorPair = {
+          firstName: [ required("First Name cannot be empty") ],
+          lastName: [ required("Last Name cannot be empty") ],
+          password: [ required("Password cannot be empty") ],
+          emailAdd: [ required("Email cannot be empty"), isEmail("Looks like this is not an email") ],
         }
-        
-        if(this.userData.emailAdd == ""){
-          this.err.emailAdd = "Email cannot be empty"
-          _this.setErrorFor()
+        const validations = {}
+        for (const [field, validators] of Object.entries(fieldErrorPair)) {
+           // validators is an array of functions that takes a fieldname
+           // i mapped through all the validators and called their function
+           // on the fieldname
+          const errors = validators.map(fn => fn(field)).filter(errMsg => errMsg !== NO_ERROR)
+          if (errors.length > 0) {
+            this.err[field] = errors[0]; // set the first error
+            this.setErrorFor()
+            validations[field] = false
+          } else {
+            this.err[field] = ""
+            validations[field] = true
+          }
         }
-        else if(!this.validEmail(this.userData.emailAdd)){
-          this.err.emailAdd = "Looks like this is not an email"
-          _this.setErrorFor()
-        }else{
-          this.err.emailAdd = ""
-          _this.setSuccessFor()
+        // activates the modal when all validations are true
+        if (Object.entries(validations).every(([, passed]) => passed === true)) {
+          this.openModal = true
         }
-
-        
-
     },
     
     closePopup(){
